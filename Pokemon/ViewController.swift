@@ -30,13 +30,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         super.viewWillAppear(animated)
         
         // Create a session configuration
-        let configuration = ARImageTrackingConfiguration()
+        let configuration = ARWorldTrackingConfiguration()
         
-        // Adding tracking images
         if let imagesToTrack = ARReferenceImage.referenceImages(inGroupNamed: "Pokemon Cards", bundle: Bundle.main) {
             
-            configuration.trackingImages = imagesToTrack
-            configuration.maximumNumberOfTrackedImages = 1
+            configuration.detectionImages = imagesToTrack
+            configuration.maximumNumberOfTrackedImages = 2
             
             print("Images successfuly added!")
         }
@@ -58,9 +57,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let node = SCNNode()
         
         if let imageAnchor = anchor as? ARImageAnchor {
-            
-            //plane is rendered vertical
-            
             let plane = SCNPlane(
                 width: imageAnchor.referenceImage.physicalSize.width,
                 height: imageAnchor.referenceImage.physicalSize.height)
@@ -70,16 +66,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             planeNode.eulerAngles.x = -Float.pi/2
             node.addChildNode(planeNode)
             
-            if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
-                if let pokiNode = pokeScene.rootNode.childNodes.first {
-                    //standing on the card
-                    pokiNode.eulerAngles.x = .pi/2
-                    planeNode.addChildNode(pokiNode)
+            if imageAnchor.referenceImage.name == "eevee-card" {
+                if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
+                    if let pokiNode = pokeScene.rootNode.childNodes.first {
+                        //standing on the card
+                        pokiNode.eulerAngles.x = .pi/2
+                        planeNode.addChildNode(pokiNode)
+                    }
+                }
+            }
+            
+            if imageAnchor.referenceImage.name == "oddish-card" {
+                if let pokeScene = SCNScene(named: "art.scnassets/oddish.scn") {
+                    if let pokiNode = pokeScene.rootNode.childNodes.first {
+                        //standing on the card
+                        pokiNode.eulerAngles.x = .pi/2
+                        planeNode.addChildNode(pokiNode)
+                    }
                 }
             }
         }
-        
-        
         return node
     }
 }
