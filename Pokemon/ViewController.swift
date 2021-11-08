@@ -72,7 +72,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             if let pokeScene = SCNScene(named: "art.scnassets/eevee.scn") {
                 if let pokiNode = pokeScene.rootNode.childNodes.first {
-                    //sitting in the middle of the card
+                    //standing on the card
+                    pokiNode.eulerAngles.x = .pi/2
                     planeNode.addChildNode(pokiNode)
                 }
             }
