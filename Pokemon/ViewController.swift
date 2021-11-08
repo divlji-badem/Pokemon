@@ -29,7 +29,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Create a session configuration
         let configuration = ARImageTrackingConfiguration()
-        // Adding tracking images 
+        
+        // Adding tracking images
         if let imagesToTrack = ARReferenceImage.referenceImages(inGroupNamed: "Pokemon Cards", bundle: Bundle.main) {
             
             configuration.trackingImages = imagesToTrack
@@ -47,5 +48,28 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Pause the view's session
         sceneView.session.pause()
+    }
+    
+    //MARK: - ARSCNViewDelegate
+    
+    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+        let node = SCNNode()
+        
+        if let imageAnchor = anchor as? ARImageAnchor {
+            
+            //plane is rendered vertical
+            
+            let plane = SCNPlane(
+                width: imageAnchor.referenceImage.physicalSize.width,
+                height: imageAnchor.referenceImage.physicalSize.height)
+            // make a transparent plane
+            plane.firstMaterial?.diffuse.contents = UIColor(white: 1.0, alpha: 0.5)
+            let planeNode = SCNNode(geometry: plane)
+            planeNode.eulerAngles.x = -Float.pi/2
+            node.addChildNode(planeNode)
+        }
+        
+        
+        return node
     }
 }
